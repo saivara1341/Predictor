@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plot</title>
+</head>
+<body>
+    <h1>Select Attributes and Plot Type</h1>
+    <form id="plotForm">
+        <input type="hidden" id="data" name="data">
+        <label for="plot_type">Select plot type:</label><br>
+        <select id="plot_type" name="plot_type">
+            <option value="Bar Plot">Bar Plot</option>
+            <option value="Line Plot">Line Plot</option>
+            <option value="Scatter Plot">Scatter Plot</option>
+            <option value="Cluster Plot">Cluster Plot</option>
+        </select><br><br>
+        <label for="selected_attributes">Select attributes:</label><br>
+        {% for attribute in attributes %}
+        <input type="checkbox" name="selected_attributes" value="{{ attribute }}">{{ attribute }}<br>
+        {% endfor %}
+        <button type="button" onclick="plot()">Plot</button>
+    </form>
+
+    <div id="plot"></div>
+
+    <script>
+        function plot() {
+            var selectedAttributes = [];
+            var checkboxes = document.querySelectorAll('input[name="selected_attributes"]:checked');
+            checkboxes.forEach(function(checkbox) {
+                selectedAttributes.push(checkbox.value);
+            });
+
+            var formData = new FormData(document.getElementById('plotForm'));
+            formData.set('data', JSON.stringify(formData.getAll('selected_attributes')));
+
+            fetch('/plot', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var img = document.createElement('img');
+                img.src = 'data:image/png;base64,' + data.plot;
+                document.getElementById('plot').innerHTML = '';
+                document.getElementById('plot').appendChild(img);
+            });
+        }
+    </script>
+</body>
+</html>

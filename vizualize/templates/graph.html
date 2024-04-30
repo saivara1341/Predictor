@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plot Graph</title>
+</head>
+<body>
+    <h1>Select Plot Type and Attributes</h1>
+    <form action="/plot" method="post">
+        <label for="plot_type">Select Plot Type:</label>
+        <select name="plot_type" id="plot_type">
+            <option value="Cluster Plot">Cluster Plot</option>
+            <option value="Bar Plot">Bar Plot</option>
+            <option value="Line Plot">Line Plot</option>
+            <option value="Scatter Plot">Scatter Plot</option>
+        </select>
+        <br>
+        <h2>Select Attributes:</h2>
+        {% for column in columns %}
+        <input type="checkbox" name="attributes" value="{{ column }}"> {{ column }}<br>
+        {% endfor %}
+        <br>
+        <input type="submit" value="Plot">
+    </form>
+</body>
+</html>
